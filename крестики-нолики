@@ -1,1 +1,88 @@
+def display_board(board):
+    for i in range(3):
+        print(f' {board[i*3]} | {board[i*3+1]} | {board[i*3+2]} ')
+        if i<2:
+            print("-----------")
 
+def display_instructions():
+    print('Выберите клетку для хода (номера от 1 до 9):')
+    print('1 | 2 | 3')
+    print('4 | 5 | 6')
+    print('7 | 8 | 9')
+    print()
+
+def check_winner(board):
+    #Проверка, есть ли победитель или ничья
+    win_lines = [
+        [0,1,2], [3,4,5], [6,7,8],  #строки
+        [0,3,6], [1,4,7], [2,5,8],  #столбцы
+        [0,4,8], [2,4,6]            #диагонали
+    ]
+    
+    for line in win_lines:
+        if board[line[0]] == board[line[1]] == board[line[2]] != ' ':
+            return board[line[0]]
+    
+    return 'Ничья' if ' ' not in board else None
+
+def get_player_move(board, current_player):
+    #Получает и проверяет ход игрока
+    while True:
+        move=input(f'Ход игрока {current_player} (1-9):')
+        try:
+            move=int(move) - 1  #преобразуем в индекс (0-8)
+            if not 0 <= move <= 8:
+                print('Введите число от 1 до 9!')
+                continue
+            
+            if board[move]!=' ':
+                print('Эта клетка уже занята!')
+                continue
+            return move
+            
+        except ValueError:
+            print('Введите число от 1 до 9!')
+
+#Основная функция игры
+def play_game():
+    
+    board=[' '] * 9
+    current_player='X'
+    
+    display_instructions() #подпись клеток
+    
+    while True:
+        display_board(board)
+        move=get_player_move(board, current_player)
+        board[move]=current_player #запись хода
+        
+        winner=check_winner(board) #проверка 3х одинак символов
+        if winner:
+            display_board(board)
+            if winner=='Ничья':
+                print('Ничья!')
+            else:
+                print(f'Игрок {winner} победил!')
+            break
+        #смена игрока    
+        current_player = 'O' if current_player == 'X' else 'X' 
+
+def ask_to_play_again():
+    while True:
+        answer = input('\nХотите сыграть ещё раз? (да/нет): ').lower()
+        if answer in ('да', 'д', 'yes', 'y'):
+            return True
+        elif answer in ('нет', 'н', 'no', 'n'):
+            return False
+        print('Пожалуйста, введите "да" или "нет"')
+
+def main():
+    print('Добро пожаловать в Крестики-Нолики!')
+    while True:
+        play_game()
+        if not ask_to_play_again():
+            print('Спасибо за игру! До свидания!')
+            break
+
+if __name__ == '__main__':
+    main()
