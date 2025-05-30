@@ -1,1 +1,59 @@
+import random
+
+def play_21():
+    print("Добро пожаловать в игру '21 очко'!")
+    
+    #Получение карт
+    player_cards=[random.randint(2, 11), random.randint(2, 11)]
+    dealer_cards=[random.randint(2, 11)]
+    
+    player_score=sum(player_cards)
+    dealer_score=sum(dealer_cards)
+    
+    print(f'\nВаши карты: {player_cards}, сумма: {player_score}')
+    print(f'Карта дилера: {dealer_cards}, сумма: {dealer_score}')
+    
+    #Ход игрока
+    while player_score<=21:
+        choice=input('\nХотите взять карту? (да/нет): ').lower()
+        if choice=='да':
+            new_card = random.randint(2, 11)
+            player_cards.append(new_card)
+            player_score +=new_card
+            print(f'\nВы получили: {new_card}')
+            print(f'Ваши карты: {player_cards}, сумма: {player_score}')
+        elif choice=='нет':
+            break
+        else:
+            print("Введите 'да' или 'нет'")
+    
+    if player_score>21:
+        print('\nПеребор! Вы проиграли!')
+        return
+    
+    #Ход дилера
+    dealer_cards.append(random.randint(2, 11))
+    dealer_score=sum(dealer_cards)
+    
+    print(f"\nКарты дилера: {dealer_cards}, сумма: {dealer_score}")
+    
+    while dealer_score<17:
+        new_card=random.randint(2, 11)
+        dealer_cards.append(new_card)
+        dealer_score +=new_card
+        print(f"Дилер взял: {new_card}")
+        print(f"Карты дилера: {dealer_cards}, сумма: {dealer_score}")
+    
+    #Определение победителя
+    print("\nРезультат:")
+    if dealer_score > 21:
+        print('Дилер перебрал карт! Вы выиграли!')
+    elif player_score > dealer_score:
+        print('Вы выиграли!')
+    elif player_score== dealer_score:
+        print('Ничья')
+    else:
+        print('Вы проиграли')
+
+play_21()
 
